@@ -1,0 +1,59 @@
+{%extends 'base.html'%}
+
+{%block main_block%}
+
+<h1>Welcome User {{request.user}}</h1>
+    <div class="container">
+       
+        <div class="w-75 border rounded border-3 shadow mx-auto mt-5 p-4">
+
+            <div class="creat-box">
+                <form action="" method="post">
+                    {%csrf_token%}
+        
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="Enter todo title" aria-label="Recipient's username" aria-describedby="button-addon2" name="title">
+                        <button class="btn btn-outline-success" type="submit" id="button-addon2">ADD</button>
+                      </div>
+
+                      <div>
+                       {%for t in data%}
+                       <div class="w=100 border rounded bg-body-tertirty mb-2 p-2">
+                        <div>
+                            {%if t.status%}
+
+                            <div class="text-decoration-line-through">
+                                {{t.title}}
+
+                            </div>
+                            {%else%}
+
+                            <div>
+                                {{t.title}}
+
+                            </div>
+
+
+                            {%endif%}
+                            
+                        </div>
+                        <div>
+                            <a href="{%url 'todo-delete' t.id%}">Delete</a>
+                            {%if t.status == False%}
+                            <a href="{%url 'todo-update' t.id%}">Update</a>
+                            {%endif%}
+                           
+                        </div>
+                       </div>
+                       {%endfor%}
+                      </div>
+                      
+        
+                </form>
+            </div>
+
+        </div>
+
+    </div>
+
+{%endblock%}

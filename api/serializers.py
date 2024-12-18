@@ -16,6 +16,8 @@ class UserSerializer(serializers.ModelSerializer):
     
 class TodoSerializer(serializers.ModelSerializer):
     
+    owner = serializers.StringRelatedField(read_only=True)
+    
     class Meta:
         
         model = Todo

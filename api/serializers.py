@@ -10,7 +10,7 @@ class UserSerializer(serializers.ModelSerializer):
         
         fields = ["id","username","email","phone","password"]
         
-    def create(self, validated_data):
+    def create(self,validated_data):
         
         return User.objects.create_user(**validated_data)
     
@@ -22,4 +22,4 @@ class TodoSerializer(serializers.ModelSerializer):
         
         fields = "__all__"
 
-        read_only_fields = ["id","created_date","owner"]
+        read_only_fields = ["id","created_date","owner","title"]

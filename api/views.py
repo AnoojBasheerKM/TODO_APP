@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render,get_object_or_404
 
 # Create your views here.
 
@@ -8,7 +8,12 @@ from rest_framework import status
 
 from rest_framework.response import Response
 
-from api.serializers import UserSerializer
+from api.serializers import UserSerializer,TodoSerializer
+
+from rest_framework import authentication,permissions
+
+from task.models import Todo
+
 
 class UserCreateView(APIView):
     
@@ -26,4 +31,55 @@ class UserCreateView(APIView):
 
         return Response(data=serializer_instance.errors,status=status.HTTP_400_BAD_REQUEST)
     
+class TodoListCreateView(APIView):
+    
+    authentication_classes = [authentication.BasicAuthentication]
+
+    permission_classes = [permissions.IsAuthenticated]
+
+    serializer_class = TodoSerializer
+
+    def get(self,request,*args,**kwargs):
+        
+        qs = Todo.objects.filter(owner=request.user)
+
+        serializer_instance = self.serializer_class(qs,many=True)
+
+        return Response(data=serializer_instance.data)
+    
+    def post(self,request,*args,**kwargs):
+        
+        serializer_instance = self.serializer_class(data=request.data)
+
+        if serializer_instance.is_valid():
+            
+            serializer_instance.save(owner=request.user)
+            
+            return Response(data=serializer_instance.data)
+        
+        return Response(data=serializer_instance.errors)
+    
+# class TodoRetrieveUpdateDeleteView(APIView):
+    
+#     authentication_classes = [authentication.BasicAuthentication]
+
+#     permission_classes = [permissions.IsAuthenticated]
+    
+#     serializer_class = TodoSerializer
+
+#     def get(self,request,*args,**kwargs):
+        
+#         id = kwargs.get("pk")
+
+#         qs = Todo.objects.get(id=id)
+            
+#         serialzer_instance = self.serializer_class(qs)
+
+#         return Response(data=serialzer_instance.data)
+    
+#     def delete(self,request,*args,**kwargs):
+        
+#         id = kwargs.get("pk")
+        
+#         todo_object =  get_object_or_404(qs)  
 
